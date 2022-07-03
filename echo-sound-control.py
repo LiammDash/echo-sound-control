@@ -45,50 +45,51 @@ def check_emote_state(sc):
         #Did we get a response?   
         if(response.status_code == 200):
             #Is the emote active?
-            for player in response.json()["teams"][1]["players"]:
-                if(player["name"] == response.json()["client_name"]):
-                    if(player["is_emote_playing"] == True):
-                        ##############
-                        #Combo Checks#
-                        ##############
+            for team in response.json()["teams"]:
+                for player in team["players"]:
+                    if(player["name"] == response.json()["client_name"]):
+                        if(player["is_emote_playing"] == True):
+                            ##############
+                            #Combo Checks#
+                            ##############
 
-                        #Block - Play/Pause
-                        if((player["blocking"] == True) and (complete == False)):
-                            emote_block()
-                            complete = True
-                        elif((player["blocking"] == False) and (complete == True)):
-                            complete = False
+                            #Block - Play/Pause
+                            if((player["blocking"] == True) and (complete == False)):
+                                emote_block()
+                                complete = True
+                            elif((player["blocking"] == False) and (complete == True)):
+                                complete = False
 
-                        #Right Shoulder - Skip Song
-                        if((response.json()["right_shoulder_pressed"] == True) and (complete == False)):
-                            emote_right_shoulder()
-                            complete = True
-                        elif((response.json()["right_shoulder_pressed"] == False) and (complete == True)):
-                            complete = False
+                            #Right Shoulder - Skip Song
+                            if((response.json()["right_shoulder_pressed"] == True) and (complete == False)):
+                                emote_right_shoulder()
+                                complete = True
+                            elif((response.json()["right_shoulder_pressed"] == False) and (complete == True)):
+                                complete = False
 
-                        #Left Shoulder - Rewind Song
-                        if((response.json()["left_shoulder_pressed"] == True) and (complete == False) and (player["blocking"] == False)):
-                            emote_left_shoulder()
-                            complete = True
-                        elif((response.json()["left_shoulder_pressed"] == False) and (complete == True) and (player["blocking"] == True)):
-                            complete = False
-                        
-                        #Right Shoulder2 - Vol Up
-                        if((response.json()["right_shoulder_pressed2"] == True) and (complete == False) and (player["blocking"] == False)):
-                            emote_right_shoulder2()
-                            complete = True
-                        elif((response.json()["right_shoulder_pressed2"] == False) and (complete == True) and (player["blocking"] == True)):
-                            complete = False
+                            #Left Shoulder - Rewind Song
+                            if((response.json()["left_shoulder_pressed"] == True) and (complete == False) and (player["blocking"] == False)):
+                                emote_left_shoulder()
+                                complete = True
+                            elif((response.json()["left_shoulder_pressed"] == False) and (complete == True) and (player["blocking"] == True)):
+                                complete = False
+                            
+                            #Right Shoulder2 - Vol Up
+                            if((response.json()["right_shoulder_pressed2"] == True) and (complete == False) and (player["blocking"] == False)):
+                                emote_right_shoulder2()
+                                complete = True
+                            elif((response.json()["right_shoulder_pressed2"] == False) and (complete == True) and (player["blocking"] == True)):
+                                complete = False
 
-                        #Left Shoulder2 - Vol Down
-                        if((response.json()["left_shoulder_pressed2"] == True) and (complete == False)):
-                            emote_left_shoulder2()
-                            complete = True
-                        elif((response.json()["left_shoulder_pressed2"] == False) and (complete == True)):
-                            complete = False
+                            #Left Shoulder2 - Vol Down
+                            if((response.json()["left_shoulder_pressed2"] == True) and (complete == False)):
+                                emote_left_shoulder2()
+                                complete = True
+                            elif((response.json()["left_shoulder_pressed2"] == False) and (complete == True)):
+                                complete = False
             
         #Loop again
-        sc.enter(.001, 1, check_emote_state, (sc,))   
+        sc.enter(.1, 1, check_emote_state, (sc,))   
     except requests.exceptions.RequestException as e:
         #Loop again, no game found
         sc.enter(5, 1, check_emote_state, (sc,))  
@@ -99,3 +100,5 @@ def check_emote_state(sc):
 s.enter(.001, 1, check_emote_state, (s,))
 
 s.run()
+
+
